@@ -1,0 +1,49 @@
+﻿@page "/service"
+@using lab6.Data
+@inject ServiceInterface Service
+@if(Service.services == null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+<div class="d-flex justify-content-between align-items-center pb-2">
+    <h1>Services</h1>
+    <a href="/service" class="btn btn-success">Add Service</a>
+</div>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">ServiceName</th>
+      <th scope="col">Description</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+       @foreach(var service in Service.services)
+        {
+            <tr>
+                <th scope="row">
+                    @service.ServiceName
+                </th>
+                <td>
+                    @service.ServiceDescription
+                </td>
+                <td>
+                    <a href="/Service/edit/@service.ID" class="btn btn-secondary">Edit service</a>
+                </td>
+                <td>
+                    <a href="/Service/delete/@service.ID" class="btn btn-danger">Delete service</a>
+                </td>
+            </tr>
+        }
+  </tbody>
+</table>
+}
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Service.GetService();
+    }
+}

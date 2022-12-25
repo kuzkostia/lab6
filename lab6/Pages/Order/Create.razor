@@ -1,0 +1,65 @@
+﻿@page "/order"
+@using lab6.Data
+@inject UsersInterface userInt
+@inject ServiceInterface serviceInt
+@inject OrdersInterface orderInt
+@inject NavigationManager navigationManager
+<h1>Add new Order</h1>
+<EditForm Model="reader" OnSubmit="CreateOrder">
+  <div class="form-group row">
+	  <label>User</label>
+	  <div class="col-sm-10">
+		  <InputSelect @bind-Value="order.UserID">
+			  @foreach(var user in userInt.users)
+			  {
+				  <option value="@user.ID">@user.FirstName</option>
+			  }
+		  </InputSelect>
+	  </div>
+  </div>
+  <div class="form-group row">
+		<label>Service</label>
+		<div class="col-sm-10">
+			<InputSelect @bind-Value="order.ServiceID">
+				@foreach(var service in serviceInt.services)
+				{
+					<option value="@service.ID">@service.ServiceName</option>
+				}
+			</InputSelect>
+		</div>
+  </div>
+  <div class="form-group row">
+		<label>Date of addmission</label>
+		<div class="col-sm-10">
+			<InputDate @bind-Value="order.DateOfAddmission"/>
+		</div>
+  </div>
+   <div class="form-group row">
+		<label>Date of issue</label>
+		<div class="col-sm-10">
+			<InputDate @bind-Value="order.DateofIssue"/>
+		</div>
+  </div>
+  
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+  <div class="col-sm-10 pt-2">
+	  <button type="submit">Add order</button>
+  </div>
+</EditForm>
+@code {
+	Order order = new Order();
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		await userInt.GetUsers();
+		await serviceInt.GetService();
+	}
+
+	public async Task CreateReader()
+	{
+		await orderInt.Create(order);
+		navigationManager.NavigateTo("/orders");
+	}
+}
